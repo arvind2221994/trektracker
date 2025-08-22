@@ -5,7 +5,11 @@ export interface IStorage {
   // User management
   getUser(id: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
+  getUserByEmail(email: string): Promise<User | undefined>;
+  getUserByGoogleId(googleId: string): Promise<User | undefined>;
+  getUserByFacebookId(facebookId: string): Promise<User | undefined>;
+  createUser(user: Partial<InsertUser>): Promise<User>;
+  updateUser(id: string, user: Partial<User>): Promise<User>;
   
   // User profiles
   getUserProfile(userId: string): Promise<UserProfile | undefined>;
@@ -15,6 +19,7 @@ export interface IStorage {
   // Treks
   getAllTreks(): Promise<Trek[]>;
   getTrek(id: string): Promise<Trek | undefined>;
+  getTrekByProviderId(provider: string, providerTrekId: string): Promise<Trek | undefined>;
   createTrek(trek: InsertTrek): Promise<Trek>;
   getRecommendedTreks(userProfile: UserProfile): Promise<Trek[]>;
   searchTreks(filters: any): Promise<Trek[]>;
@@ -184,11 +189,51 @@ export class MemStorage implements IStorage {
     return Array.from(this.users.values()).find(user => user.username === username);
   }
 
-  async createUser(insertUser: InsertUser): Promise<User> {
+  async createUser(insertUser: Partial<InsertUser>): Promise<User> {
     const id = randomUUID();
-    const user: User = { ...insertUser, id };
+    const user: User = { 
+      id,
+      username: insertUser.username || null,
+      password: insertUser.password || null,
+      email: insertUser.email || null,
+      firstName: insertUser.firstName || null,
+      lastName: insertUser.lastName || null,
+      profileImageUrl: insertUser.profileImageUrl || null,
+      googleId: insertUser.googleId || null,
+      facebookId: insertUser.facebookId || null,
+      provider: insertUser.provider || 'local',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
     this.users.set(id, user);
     return user;
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(user => user.email === email);
+  }
+
+  async getUserByGoogleId(googleId: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(user => user.googleId === googleId);
+  }
+
+  async getUserByFacebookId(facebookId: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(user => user.facebookId === facebookId);
+  }
+
+  async updateUser(id: string, userUpdate: Partial<User>): Promise<User> {
+    const existingUser = this.users.get(id);
+    if (!existingUser) {
+      throw new Error('User not found');
+    }
+
+    const updatedUser: User = {
+      ...existingUser,
+      ...userUpdate,
+      updatedAt: new Date(),
+    };
+    this.users.set(id, updatedUser);
+    return updatedUser;
   }
 
   async getUserProfile(userId: string): Promise<UserProfile | undefined> {
@@ -200,6 +245,7 @@ export class MemStorage implements IStorage {
     const newProfile: UserProfile = {
       ...profile,
       id,
+      userId: profile.userId,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -228,11 +274,27 @@ export class MemStorage implements IStorage {
     return this.treks.get(id);
   }
 
+  async getTrekByProviderId(provider: string, providerTrekId: string): Promise<Trek | undefined> {
+    return Array.from(this.treks.values()).find(
+      trek => trek.provider === provider && trek.providerTrekId === providerTrekId
+    );
+  }
+
   async createTrek(trek: InsertTrek): Promise<Trek> {
     const id = randomUUID();
     const newTrek: Trek = {
       ...trek,
       id,
+      distance: trek.distance ?? null,
+      maxElevation: trek.maxElevation ?? null,
+      longDescription: trek.longDescription ?? null,
+      imageUrl: trek.imageUrl ?? null,
+      reviewCount: trek.reviewCount ?? 0,
+      price: trek.price ?? null,
+      provider: trek.provider ?? 'custom',
+      providerUrl: trek.providerUrl ?? null,
+      providerTrekId: trek.providerTrekId ?? null,
+      lastUpdated: new Date(),
       createdAt: new Date(),
     };
     this.treks.set(id, newTrek);
@@ -340,6 +402,9 @@ export class MemStorage implements IStorage {
     const newPlan: TrekPlan = {
       ...plan,
       id,
+      startDate: plan.startDate ?? null,
+      preparation: plan.preparation ?? null,
+      isCompleted: plan.isCompleted ?? false,
       createdAt: new Date(),
       updatedAt: new Date(),
     };

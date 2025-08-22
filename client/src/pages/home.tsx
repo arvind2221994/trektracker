@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import ProfileSetup from "@/components/profile-setup";
+import SocialLogin from "@/components/social-login";
 import TrekCard from "@/components/trek-card";
 import { Trek } from "@shared/schema";
 import { Star, Users, Globe, TrendingUp } from "lucide-react";
@@ -54,6 +55,13 @@ export default function Home() {
               <Link href="/discover">Explore Treks</Link>
             </Button>
           </div>
+        </div>
+      </section>
+
+      {/* Authentication Check and Content */}
+      <section className="py-16 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SocialLogin />
         </div>
       </section>
 

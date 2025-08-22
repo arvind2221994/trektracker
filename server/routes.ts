@@ -2,6 +2,8 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertUserProfileSchema, insertWishlistSchema, insertTrekPlanSchema } from "@shared/schema";
+import { setupAuthentication } from "./auth/auth-routes";
+import { DataSyncService } from "./data-sync";
 import { z } from "zod";
 
 const searchFiltersSchema = z.object({
@@ -13,6 +15,12 @@ const searchFiltersSchema = z.object({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Setup authentication
+  setupAuthentication(app);
+  
+  // Initialize and start data sync service
+  const dataSyncService = new DataSyncService();
+  dataSyncService.startPeriodicSync();
   // Trek routes
   app.get("/api/treks", async (req, res) => {
     try {

@@ -5,8 +5,17 @@ import { z } from "zod";
 
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
+  username: text("username").unique(),
+  password: text("password"),
+  email: text("email").unique(),
+  firstName: text("first_name"),
+  lastName: text("last_name"),
+  profileImageUrl: text("profile_image_url"),
+  googleId: text("google_id").unique(),
+  facebookId: text("facebook_id").unique(),
+  provider: text("provider"), // 'local', 'google', 'facebook'
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const userProfiles = pgTable("user_profiles", {
@@ -41,6 +50,11 @@ export const treks = pgTable("treks", {
   imageUrl: text("image_url"),
   highlights: text("highlights").array().notNull(),
   requirements: jsonb("requirements"), // fitness level, experience, etc.
+  price: integer("price"), // in rupees
+  provider: text("provider"), // 'bikat', 'yhai', 'indiahikes', 'custom'
+  providerUrl: text("provider_url"),
+  providerTrekId: text("provider_trek_id"),
+  lastUpdated: timestamp("last_updated").defaultNow(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -63,9 +77,10 @@ export const trekPlans = pgTable("trek_plans", {
 });
 
 // Insert schemas
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
+export const insertUserSchema = createInsertSchema(users).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
 });
 
 export const insertUserProfileSchema = createInsertSchema(userProfiles).omit({

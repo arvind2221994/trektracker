@@ -386,11 +386,11 @@ export default function TrekDetail() {
                       <div className="space-y-2">
                         <div className="flex justify-between">
                           <span className="text-slate-gray">Recommended Fitness Level:</span>
-                          <Badge variant="outline">{trek.requirements?.fitnessLevel || "Intermediate"}</Badge>
+                          <Badge variant="outline">{(trek.requirements as any)?.fitnessLevel || "Intermediate"}</Badge>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-slate-gray">Prior Experience:</span>
-                          <Badge variant="outline">{trek.requirements?.experience || "Some"}</Badge>
+                          <Badge variant="outline">{(trek.requirements as any)?.experience || "Some"}</Badge>
                         </div>
                       </div>
                     </div>

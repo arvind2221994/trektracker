@@ -84,6 +84,32 @@ export default function TrekCard({ trek, isInWishlist = false, showWishlistButto
     }
   };
 
+  const getProviderColor = (provider: string) => {
+    switch (provider) {
+      case "bikat":
+        return "bg-blue-600";
+      case "yhai":
+        return "bg-green-600";
+      case "indiahikes":
+        return "bg-orange-600";
+      default:
+        return "bg-forest";
+    }
+  };
+
+  const getProviderName = (provider: string) => {
+    switch (provider) {
+      case "bikat":
+        return "Bikat";
+      case "yhai":
+        return "YHAI";
+      case "indiahikes":
+        return "Indiahikes";
+      default:
+        return "Custom";
+    }
+  };
+
   const rating = trek.rating / 10; // Convert from 1-50 to 0.1-5.0 scale
 
   return (
@@ -111,9 +137,16 @@ export default function TrekCard({ trek, isInWishlist = false, showWishlistButto
                 </span>
               </div>
             </div>
-            <p className="text-slate-gray mb-4" data-testid={`text-trek-location-${trek.id}`}>
-              {trek.location}
-            </p>
+            <div className="flex items-center justify-between mb-4">
+              <p className="text-slate-gray" data-testid={`text-trek-location-${trek.id}`}>
+                {trek.location}
+              </p>
+              {trek.provider && trek.provider !== 'custom' && (
+                <span className={`text-xs px-2 py-1 rounded-full text-white ${getProviderColor(trek.provider)}`} data-testid={`badge-provider-${trek.id}`}>
+                  {getProviderName(trek.provider)}
+                </span>
+              )}
+            </div>
             <div className="flex justify-between items-center mb-4">
               <span 
                 className={cn(
@@ -132,9 +165,16 @@ export default function TrekCard({ trek, isInWishlist = false, showWishlistButto
               {trek.description}
             </p>
             <div className="flex justify-between items-center">
-              <span className="text-forest font-semibold" data-testid={`text-trek-best-time-${trek.id}`}>
-                Best: {trek.bestMonths.slice(0, 2).join("-")}
-              </span>
+              <div className="flex flex-col">
+                <span className="text-forest font-semibold text-sm" data-testid={`text-trek-best-time-${trek.id}`}>
+                  Best: {trek.bestMonths.slice(0, 2).join("-")}
+                </span>
+                {trek.price && (
+                  <span className="text-warm-orange font-semibold text-sm" data-testid={`text-trek-price-${trek.id}`}>
+                    ₹{trek.price.toLocaleString()}
+                  </span>
+                )}
+              </div>
               {showWishlistButton && (
                 <div className="flex space-x-2">
                   <Button

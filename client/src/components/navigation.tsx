@@ -1,4 +1,5 @@
 import { Link, useLocation } from "wouter";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export default function Navigation() {
@@ -6,6 +7,7 @@ export default function Navigation() {
 
   const navItems = [
     { href: "/discover", label: "Discover", dataTestId: "link-discover" },
+    { href: "/providers", label: "Partners", dataTestId: "link-providers" },
     { href: "/planning", label: "Planning", dataTestId: "link-planning" },
   ];
 
@@ -25,28 +27,30 @@ export default function Navigation() {
               <div className="ml-10 flex items-baseline space-x-4">
                 {navItems.map((item) => (
                   <Link key={item.href} href={item.href} data-testid={item.dataTestId}>
-                    <a
+                    <span
                       className={cn(
-                        "px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                        "px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer",
                         location === item.href
                           ? "text-forest bg-forest/10"
                           : "text-slate-gray hover:text-forest hover:bg-forest/5"
                       )}
                     >
                       {item.label}
-                    </a>
+                    </span>
                   </Link>
                 ))}
               </div>
             </div>
           </div>
           <div className="flex items-center space-x-4">
-            <button
-              className="bg-forest text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-forest/90 transition-colors"
-              data-testid="button-login"
+            <Button
+              variant="outline"
+              className="border-forest text-forest hover:bg-forest hover:text-white"
+              onClick={() => alert('OAuth not configured for demo. Continue as guest!')}
+              data-testid="button-google-login"
             >
-              Login
-            </button>
+              Sign in with Google
+            </Button>
           </div>
         </div>
       </div>

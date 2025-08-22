@@ -8,6 +8,7 @@ import Home from "@/pages/home";
 import Discover from "@/pages/discover";
 import TrekDetail from "@/pages/trek-detail";
 import Planning from "@/pages/planning";
+import Providers from "@/pages/providers";
 import Navigation from "@/components/navigation";
 
 function Router() {
@@ -19,6 +20,7 @@ function Router() {
         <Route path="/discover" component={Discover} />
         <Route path="/trek/:id" component={TrekDetail} />
         <Route path="/planning" component={Planning} />
+        <Route path="/providers" component={Providers} />
         <Route component={NotFound} />
       </Switch>
     </div>
