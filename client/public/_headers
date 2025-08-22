@@ -1,0 +1,14 @@
+# Cache static assets for 1 year
+/assets/*
+  Cache-Control: max-age=31536000, immutable
+
+# Cache HTML files for 1 hour
+/*.html
+  Cache-Control: max-age=3600
+
+# Security headers
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
