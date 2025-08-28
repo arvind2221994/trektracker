@@ -11,8 +11,8 @@ NODE_ENV = "preview"
 
 [[env.production.kv_namespaces]]
 binding = "KV"
-id = "your-kv-namespace-id"
+id = "5ee25c4b47034788bd1bf549b8fcbe1c"
 
 [[env.preview.kv_namespaces]]
 binding = "KV"
-preview_id = "your-preview-kv-namespace-id"
+preview_id = "5ee25c4b47034788bd1bf549b8fcbe1c"
