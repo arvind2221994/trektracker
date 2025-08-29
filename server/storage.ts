@@ -1,5 +1,5 @@
 import { type User, type InsertUser, type UserProfile, type InsertUserProfile, type Trek, type InsertTrek, type UserWishlist, type InsertWishlist, type TrekPlan, type InsertTrekPlan } from "@shared/schema";
-import { randomUUID } from "crypto";
+import { randomUUID } from "node:crypto";
 
 export interface IStorage {
   // User management

@@ -1,7 +1,7 @@
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { storage } from '../storage';
-import { randomUUID } from 'crypto';
+import { randomUUID } from 'node:crypto';
 
 export function setupGoogleAuth() {
   passport.use(new GoogleStrategy({
